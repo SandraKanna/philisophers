@@ -1,25 +1,27 @@
-NAME = philo.a
+CC = cc
+CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes
 
-SRC = philo.c
+NAME = philo
+
+SRC = ${addprefix src/, main.c philo.c utils.c ft_atoll.c clean.c}
 
 OBJ = $(SRC:.c=.o)
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@printf "."
 
 all: $(NAME)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
 $(NAME): $(OBJ)
-	ar -rcs $@ $^
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@printf "all clean"
 
 re: fclean all
 

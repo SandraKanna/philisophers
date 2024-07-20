@@ -1,19 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/06/13 16:05:32 by skanna           ###   ########.fr       */
+/*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
+/*   Updated: 2024/07/20 17:06:33 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#include "philo.h"
 
-# include <stdlib.h>
-# include <unistd.h>
+void	routine()
+{
+	
+}
 
-#endif
+void	run_philo(t_philo params)
+{
+	pthread_t	thread;
+
+// init tab of philosophers 
+// init tab of forks
+// create routine: eat, sleep, think
+//init one thread per philo
+	pthread_create();
+}
+
+
+
+// int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); 
