@@ -6,7 +6,7 @@
 /*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:17:03 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 21:05:13 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/20 22:37:38 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,7 @@ void	clean_struct(t_data *structure)
 		free(structure->philos);
 	}
 	pthread_mutex_destroy(&structure->print_lock);
+	pthread_mutex_destroy(&structure->meals_lock);
+	pthread_mutex_destroy(&structure->death_lock);
 	free(structure);
 }

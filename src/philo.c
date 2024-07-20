@@ -6,7 +6,7 @@
 /*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 20:59:51 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/20 22:56:09 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,12 @@ void	usleep_ms(int ms)
 	usleep(ms * 1000);
 }
 
-void	print_status(t_philo *philo, char *status)
-{
-	long long	timestamp;
-
-	pthread_mutex_lock(&philo->data->print_lock);
-	timestamp = current_timestamp() - philo->data->start_time;
-	ft_putnbr_fd(timestamp, 1);
-	ft_putstr_fd(" ", 1);
-	ft_putnbr_fd(philo->id + 1, 1);
-	ft_putstr_fd(" ", 1);
-	ft_putstr_fd(status, 1);
-	ft_putstr_fd("\n", 1);
-	pthread_mutex_unlock(&philo->data->print_lock);
-}
-
 int	run_philo(t_data *structure)
 {
 	int	i;
 
 	i = 0;
+	structure->start_time = current_timestamp();
 	while (i < structure->num_philo)
 	{
 		if (pthread_create(&structure->philos[i].thread, NULL, routine, &structure->philos[i]) != 0)
@@ -54,6 +40,26 @@ int	run_philo(t_data *structure)
 			return (1);
 		}
 		i++;
+	}
+	while (1)
+	{
+		if (structure->all_ate == structure->num_philo)
+		{
+			pthread_mutex_unlock(&structure->death_lock);
+			pthread_mutex_unlock(&structure->meals_lock);
+			ft_putstr_fd("All philosophers have eaten.\n", 1);
+			break ;
+		}
+		if (structure->death)
+		{
+			pthread_mutex_unlock(&structure->death_lock);
+			pthread_mutex_unlock(&structure->meals_lock);
+			ft_putstr_fd("A philosopher has died.\n", 1);
+			break ;
+		}
+		pthread_mutex_unlock(&structure->death_lock);
+		pthread_mutex_unlock(&structure->meals_lock);
+		usleep(1000);
 	}
 	i = 0;
 	while (i < structure->num_philo)
