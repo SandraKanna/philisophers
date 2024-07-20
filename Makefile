@@ -3,7 +3,8 @@ CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes
 
 NAME = philo
 
-SRC = ${addprefix src/, main.c philo.c utils.c ft_atoll.c clean.c}
+SRC = ${addprefix src/, main.c philo.c init_philo.c routine.c\
+	${addprefix utils/, utils.c ft_atoll.c clean.c}}
 
 OBJ = $(SRC:.c=.o)
 

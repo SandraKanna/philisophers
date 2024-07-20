@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 16:23:16 by skanna           ###   ########.fr       */
+/*   Updated: 2024/07/20 20:47:21 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,9 @@ int	check_param(char *str)
 	return (1);
 }
 
-t_philo	*init_philo(char **av)
-{
-	t_philo	*params;
-	int		err;
-
-	params = malloc (sizeof (t_philo));
-	if (!params)
-		return (NULL);
-	err = 0;
-	params->num_philo = ft_atoll(av[1], &err);
-	params->time_to_die = ft_atoll(av[2], &err);
-	params->time_to_eat = ft_atoll(av[3], &err);
-	params->time_to_sleep = ft_atoll(av[4], &err);
-	if (av[5])
-		params->num_must_eat = ft_atoll(av[5], &err);
-	else
-		params->num_must_eat = 0;
-	if (err)
-		return (NULL);
-	return (params);
-}
-
 int	main(int ac, char **av)
 {
-	t_philo	*params;
+	t_data	*structure;
 	int		i;
 
 	i = 1;
@@ -76,9 +54,11 @@ int	main(int ac, char **av)
 		ft_putstr_fd("Wrong number of parameters\n", 2);
 		return (1);
 	}
-	params = init_philo(av);
-	if (!params)
+	structure = init_struct(av);
+	if (!structure)
 		return (1);
-	run_philo(params);
+	if (run_philo(structure) != 0)
+		return (clean_struct(structure), 1);
+	clean_struct(structure);
 	return (0);
 }
