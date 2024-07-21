@@ -6,7 +6,7 @@
 /*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 22:57:21 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/21 17:02:04 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
 	int				meals_count;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
+	// pthread_mutex_t	last_meal_time_lock;
 	pthread_t		thread;
 	struct s_data	*data;
 }	t_philo;
@@ -38,14 +39,14 @@ typedef struct s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_must_eat;
+	long long		start_time;
 	int				all_ate;
 	int				death;
-	pthread_mutex_t	*forks;
 	t_philo			*philos;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	meals_lock;
-	long long		start_time;
 }	t_data;
 
 void		clean_struct(t_data *structure);
@@ -55,6 +56,8 @@ t_data		*init_struct(char **av);
 void		*ft_memset(void *arg, int c, size_t n);
 long long	ft_atoll(const char *str, int *err);
 int			run_philo(t_data *structure);
+int			is_dead(t_philo *philo);
+int			meals_completed(t_data *data, t_philo *philo);
 void		*routine(void *arg);
 long long	current_timestamp(void);
 void		usleep_ms(int ms);

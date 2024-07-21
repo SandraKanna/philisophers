@@ -1,18 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philo.c                                       :+:      :+:    :+:   */
+/*   initialization.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 22:35:32 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/21 17:03:49 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init_forks(t_data *structure, int size)
+static int	init_philos(t_data *structure, int size)
+{
+	int				i;
+	pthread_mutex_t	*forks;
+
+	structure->philos = malloc(sizeof(t_philo) * size);
+	if (!structure->philos)
+		return (1);
+	i = 0;
+	forks = structure->forks;
+	while (i < size)
+	{
+		structure->philos[i].id = i + 1;
+		structure->philos[i].last_meal_time = current_timestamp();
+		structure->philos[i].meals_count = 0;
+		structure->philos[i].left_fork = &forks[i];
+		structure->philos[i].right_fork = &forks[(i + 1) % size];
+		structure->philos[i].data = structure;
+		i++;
+	}
+	return (0);
+}
+
+static int	init_forks(t_data *structure, int size)
 {
 	int	i;
 
@@ -27,7 +50,6 @@ int	init_forks(t_data *structure, int size)
 			while (i > 0)
 				pthread_mutex_destroy(&structure->forks[--i]);
 			free(structure->forks);
-			structure->forks = NULL;
 			return (1);
 		}
 		i++;
@@ -35,26 +57,27 @@ int	init_forks(t_data *structure, int size)
 	return (0);
 }
 
-int	init_philos(t_data *structure, int size)
+static int	init_mutexes(t_data *structure)
 {
-	int				i;
-	pthread_mutex_t	*forks;
-	long long		current_time;
-
-	structure->philos = malloc(sizeof(t_philo) * size);
-	if (!structure->philos)
+	if (pthread_mutex_init(&structure->print_lock, NULL) != 0)
 		return (1);
-	i = 0;
-	current_time = current_timestamp();
-	forks = structure->forks;
-	while (i < size)
+	if (pthread_mutex_init(&structure->meals_lock, NULL) != 0)
 	{
-		structure->philos[i].id = i;
-		structure->philos[i].last_meal_time = current_time;
-		structure->philos[i].left_fork = &forks[i];
-		structure->philos[i].right_fork = &forks[(i + 1) % size];
-		structure->philos[i].data = structure;
-		i++;
+		pthread_mutex_destroy(&structure->print_lock);
+		return (1);
+	}
+	if (pthread_mutex_init(&structure->death_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&structure->print_lock);
+		pthread_mutex_destroy(&structure->meals_lock);
+		return (1);
+	}
+	if (init_forks(structure, structure->num_philo) == 1)
+	{
+		pthread_mutex_destroy(&structure->print_lock);
+		pthread_mutex_destroy(&structure->meals_lock);
+		pthread_mutex_destroy(&structure->death_lock);
+		return (1);
 	}
 	return (0);
 }
@@ -75,28 +98,12 @@ t_data	*init_struct(char **av)
 	structure->time_to_sleep = ft_atoll(av[4], &err);
 	if (av[5])
 		structure->num_must_eat = ft_atoll(av[5], &err);
-	else
-		structure->num_must_eat = 0;
 	if (err)
 		return (free(structure), NULL);
-	if (pthread_mutex_init(&structure->print_lock, NULL) != 0)
-		return (free(structure), NULL);
-	if (pthread_mutex_init(&structure->meals_lock, NULL) != 0)
-	{
-		pthread_mutex_destroy(&structure->print_lock);
-		return (free(structure), NULL);
-	}
-	if (pthread_mutex_init(&structure->death_lock, NULL) != 0)
-	{
-		pthread_mutex_destroy(&structure->print_lock);
-		pthread_mutex_destroy(&structure->meals_lock);
-		return (free(structure), NULL);
-	}
-	structure->death = 0;
-	if (init_forks(structure, structure->num_philo) == 1)
-		return (pthread_mutex_destroy(&structure->print_lock), free(structure), NULL);
-	if (init_philos(structure, structure->num_philo) == 1)
-		return (clean_struct(structure), NULL);
 	structure->start_time = current_timestamp();
+	if (init_mutexes(structure) != 0)
+		return (free(structure), NULL);
+	if (init_philos(structure, structure->num_philo) != 0)
+		return (free(structure->forks), free(structure), NULL);
 	return (structure);
 }

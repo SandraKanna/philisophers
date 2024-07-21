@@ -1,9 +1,9 @@
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes
+CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes -fsanitize=address
 
 NAME = philo
 
-SRC = ${addprefix src/, main.c philo.c init_philo.c routine.c\
+SRC = ${addprefix src/, main.c philo.c initialization.c routine.c check_status.c\
 	${addprefix utils/, utils.c ft_atoll.c clean.c}}
 
 OBJ = $(SRC:.c=.o)

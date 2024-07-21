@@ -6,7 +6,7 @@
 /*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 21:26:35 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/21 12:54:06 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_param(char *str)
 			i++;
 		else
 		{
-			ft_putstr_fd("Wrong type of parameter\n", 2);
+			ft_putstr_fd("Parameters must be positive integers\n", 2);
 			return (0);
 		}
 	}
@@ -41,18 +41,15 @@ int	main(int ac, char **av)
 	int		i;
 
 	i = 1;
-	if (ac >= 5 && ac <= 6)
+	if (ac != 5 && ac != 6)
 	{
-		while (av[i])
-		{
-			if (!check_param(av[i++]))
-				return (1);
-		}
-	}
-	else
-	{
-		ft_putstr_fd("Wrong number of parameters\n", 2);
+		ft_putstr_fd("Invalid number of parameters\n", 2);
 		return (1);
+	}
+	while (av[i])
+	{
+		if (!check_param(av[i++]))
+			return (1);
 	}
 	structure = init_struct(av);
 	if (!structure)

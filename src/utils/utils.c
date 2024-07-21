@@ -6,7 +6,7 @@
 /*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:43:58 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 21:18:28 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/21 14:38:53 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,18 @@ void	*ft_memset(void *arg, int c, size_t n)
 	while (i < n)
 		((char *)arg)[i++] = c;
 	return (arg);
+}
+
+long long	current_timestamp(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) < 0)
+		ft_putstr_fd("Error getting time of day\n", 2);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	usleep_ms(int ms)
+{
+	usleep(ms * 1000);
 }
