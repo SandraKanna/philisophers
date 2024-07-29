@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 20:52:53 by sandra            #+#    #+#             */
-/*   Updated: 2024/07/21 17:02:31 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/29 18:36:31 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static int	eat(t_philo *philo)
 	print_status(philo, "is eating");
 	philo->last_meal_time = current_timestamp();
 	usleep_ms(philo->data->time_to_eat);
+	//update meal for this philo after sleep
 	if (is_dead(philo))
 	{
 		pthread_mutex_unlock(philo->right_fork);

@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes -fsanitize=address
+CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes #-fsanitize=address
 
 NAME = philo
 

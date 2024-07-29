@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/21 17:02:04 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/29 18:36:24 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_philo
 	pthread_mutex_t	*right_fork;
 	// pthread_mutex_t	last_meal_time_lock;
 	pthread_t		thread;
-	struct s_data	*data;
+	struct s_data	*data;//pas besoin si jai un watcher
 }	t_philo;
 
 typedef struct s_data

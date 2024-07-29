@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/21 17:03:50 by sandra           ###   ########.fr       */
+/*   Updated: 2024/07/29 18:22:34 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	run_philo(t_data *structure)
 
 	i = 0;
 	structure->start_time = current_timestamp();
+	//whatcher aveec thread -> remplace boucle monitor_end
 	while (i < structure->num_philo)
 	{
 		if (pthread_create(&structure->philos[i].thread, NULL, \
