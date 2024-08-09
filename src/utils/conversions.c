@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoll.c                                         :+:      :+:    :+:   */
+/*   conversions.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:54:39 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/20 15:57:32 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/06 16:11:01 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,46 @@ long long	ft_atoll(const char *str, int *err)
 	if (str[i] != '\0')
 		*err = 1;
 	return (result * sign);
+}
+
+static int	count_digits(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]))
+			i++;
+		else
+			break ;
+	}
+	return (i);
+}
+
+int	ft_atoi(const char *str)
+{
+	long	num;
+	int		sign;
+	int		i;
+	int		n;
+
+	num = 0;
+	sign = 1;
+	while (*str == 32 || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == 45)
+		sign = -1;
+	if (*str == 43 || *str == 45)
+		str++;
+	n = count_digits((char *)str);
+	i = 0;
+	while (i < n)
+	{
+		num = (num * 10) + (str[i] - '0');
+		if ((sign == 1 && num > INT_MAX) || (sign == -1 && (-num) < INT_MIN))
+			return (0);
+		i++;
+	}
+	return ((int)(num * sign));
 }

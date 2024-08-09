@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/21 12:54:06 by sandra           ###   ########.fr       */
+/*   Updated: 2024/08/06 15:55:49 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	check_param(char *str)
 
 int	main(int ac, char **av)
 {
-	t_data	*structure;
+	t_data	*data;
 	int		i;
 
 	i = 1;
@@ -51,11 +51,11 @@ int	main(int ac, char **av)
 		if (!check_param(av[i++]))
 			return (1);
 	}
-	structure = init_struct(av);
-	if (!structure)
+	data = init_data(av);
+	if (!data)
 		return (1);
-	if (run_philo(structure) != 0)
-		return (clean_struct(structure), 1);
-	clean_struct(structure);
+	if (run_philo(data) != 0)
+		return (clean_struct(data), 1);
+	clean_struct(data);
 	return (0);
 }

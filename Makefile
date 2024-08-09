@@ -3,8 +3,8 @@ CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes #-fsanitize=address
 
 NAME = philo
 
-SRC = ${addprefix src/, main.c philo.c initialization.c routine.c check_status.c\
-	${addprefix utils/, utils.c ft_atoll.c clean.c}}
+SRC = ${addprefix src/, main.c philo.c init_data.c \
+	${addprefix utils/, utils.c conversions.c clean.c}}
 
 OBJ = $(SRC:.c=.o)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:17:03 by skanna            #+#    #+#             */
-/*   Updated: 2024/07/21 17:02:42 by sandra           ###   ########.fr       */
+/*   Updated: 2024/08/09 11:59:52 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	clean_struct(t_data *structure)
 	i = 0;
 	if (structure->forks)
 	{
-		while (i < structure->num_philo)
+		while (i < structure->total_meals)
 			pthread_mutex_destroy(&structure->forks[i++]);
 		free(structure->forks);
 	}
