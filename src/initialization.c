@@ -6,13 +6,13 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/12 13:14:13 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 18:10:43 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	init_args(t_philo *philo, int size, char **av)
+static void	init_args(t_philo *philo, char **av)
 {
 	philo->time_to_die = ft_atoi(av[2]);
 	philo->time_to_eat = ft_atoi(av[3]);
@@ -38,7 +38,8 @@ static void	init_philos(t_data *data, int size, char **args)
 	while (i < size)
 	{
 		data->philos[i].id = i + 1;
-		init_args(&data->philos[i], size, args);
+		data->philos[i].total_philos = size;
+		init_args(&data->philos[i], args);
 		data->philos[i].l_fork = &data->forks[i];
 		if (i == 0)
 			data->philos[i].l_fork = &data->forks[size - 1];
@@ -70,7 +71,7 @@ static int	init_forks(t_data *structure, int size)
 	return (0);
 }
 
-static int	init_mutexes(t_data *structure, int size)
+static int	init_mutexes(t_data *structure)
 {
 	if (pthread_mutex_init(&structure->print_lock, NULL) != 0)
 		return (1);
@@ -106,7 +107,7 @@ t_data	*init_struct(char **av)
 		return (free(data->philos), free(data), NULL);
 	if (init_forks(data, size) != 0)
 		return (free(data->philos), free(data->forks), free(data), NULL);
-	if (init_mutexes(data, size) != 0)
+	if (init_mutexes(data) != 0)
 		return (free(data->philos), free(data->forks), free(data), NULL);
 	init_philos(data, size, av);
 	return (data);

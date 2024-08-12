@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/12 13:12:37 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 18:51:00 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@
 typedef struct s_philo
 {
 	int				id;
+	int				total_philos;	
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -85,14 +86,14 @@ typedef struct s_data
 	pthread_mutex_t	print_lock;
 }					t_data;
 
-void		clean_struct(t_data *structure);
+void		clean_struct(t_data *structure, int size);
 void		ft_putstr_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
-// t_data		*init_struct(char **av);
-t_data		*init_data(char **av);
+t_data		*init_struct(char **av);
+// t_data		*init_data(char **av);
 void		*ft_memset(void *arg, int c, size_t n);
 long long	ft_atoll(const char *str, int *err);
-int			run_philo(t_data *structure);
+int			run_philo(t_data *structure, int size);
 int			is_dead(t_philo *philo);
 int			meals_completed(t_data *data, t_philo *philo);
 void		*routine(void *arg);

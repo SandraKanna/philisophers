@@ -6,28 +6,25 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:17:03 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/09 11:59:52 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 18:48:41 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	clean_struct(t_data *structure)
+void	clean_struct(t_data *structure, int size)
 {
 	int	i;
 
 	i = 0;
 	if (structure->forks)
 	{
-		while (i < structure->total_meals)
+		while (i < size)
 			pthread_mutex_destroy(&structure->forks[i++]);
 		free(structure->forks);
 	}
 	if (structure->philos)
 	{
-		// i = 0;
-		// while (i < structure->num_philo)
-		// 	pthread_mutex_destroy(&structure->philos[i++].last_meal_time_lock);
 		free(structure->philos);
 	}
 	pthread_mutex_destroy(&structure->print_lock);

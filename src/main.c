@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/12 12:53:42 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 18:49:18 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int	main(int ac, char **av)
 		if (!check_param(av[i++]))
 			return (1);
 	}
-	data = init_data(av);
+	data = init_struct(av);
 	if (!data)
 		return (1);
-	if (run_philo(data) != 0)
-		return (clean_struct(data), 1);
-	clean_struct(data);
+	if (run_philo(data, ft_atoi(av[1])) != 0)
+		return (clean_struct(data, ft_atoi(av[1])), 1);
+	clean_struct(data, ft_atoi(av[1]));
 	return (0);
 }
 
