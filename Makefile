@@ -1,9 +1,9 @@
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes #-fsanitize=address
+CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes #-fsanitize=thread
 
 NAME = philo
 
-SRC = ${addprefix src/, main.c philo.c init_data.c \
+SRC = ${addprefix src/, main.c philo.c initialization.c \
 	${addprefix utils/, utils.c conversions.c clean.c}}
 
 OBJ = $(SRC:.c=.o)

@@ -6,24 +6,45 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 15:53:37 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/09 11:31:38 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 11:29:16 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static pthread_t	*init_philos(t_data *data)
+static t_philo	*init_philos(t_data *data, int n_philos)
 {
-	pthread_t	*philos;
-	int			i;
+	t_philo	*philos;
+	int		i;
 
-	i = 0;
-	philos = malloc (sizeof(pthread_t) * data->total_philos);
+	philos = malloc (sizeof(t_philo) * n_philos);
 	if (!philos)
 	{
-		while (i < data->total_philos)
+		while (i < n_philos)
 			pthread_mutex_destroy(&data->forks[i++]);
 		return (free(data->forks), NULL);
+	}
+	i = 0;
+	while (i < n_philos)
+	{
+		philos[i].id = i + 1;
+		philos[i].time_to_die = data->time_to_die;
+		philos[i].time_to_eat = data->time_to_eat;
+		philos[i].time_to_sleep = data->time_to_sleep;
+		philos[i].start_time = get_cur_time();
+		philos[i].last_meal = get_cur_time();
+		philos[i].is_dead = 0;
+		philos[i].is_eating = 0;
+		philos[i].meals_count = 0;
+		philos[i].l_fork = &data->forks[i];
+		if (i == 0)
+			philos[i].l_fork = &data->forks[n_philos - 1];
+		else
+			philos[i].l_fork = &data->forks[i - 1];
+		philos[i].death_lock = &data->death_lock;
+		philos[i].meals_lock = &data->meals_lock;
+		philos[i].print_lock = &data->print_lock;
+		i++;
 	}
 }
 
@@ -68,7 +89,7 @@ t_data	*init_data(char **av)
 	data->forks = init_forks(data->total_philos);
 	if (!data->forks)
 		return (free(data), NULL);
-	data->total_philos = init_philos(data);
+	data->total_philos = init_philos(data, data->total_philos);
 	if (!data->total_philos)
 		return (free(data), NULL);
 	return (data);

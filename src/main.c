@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/06 15:55:49 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 12:53:42 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,3 +59,6 @@ int	main(int ac, char **av)
 	clean_struct(data);
 	return (0);
 }
+
+
+//while ! ./philo args; do done -->check for possible data race no debe haber

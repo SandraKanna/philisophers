@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:43:58 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/06 16:11:06 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/12 11:16:26 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*ft_memset(void *arg, int c, size_t n)
 	return (arg);
 }
 
-long long	current_timestamp(void)
+long long	get_cur_time(void)
 {
 	struct timeval	tv;
 
