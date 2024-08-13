@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/12 19:11:45 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/13 11:21:50 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,31 +48,31 @@
 // 	return (0);
 // }
 
-int	run_philo(t_data *structure, int size)
+int	run_philo(t_data *data, int size)
 {
 	int	i;
 
 	i = 0;
-	// structure->start_time = current_timestamp();
+	// data->start_time = current_timestamp();
 	//whatcher aveec thread -> remplace boucle monitor_end
 	while (i < size)
 	{
-		if (pthread_create(&structure->philos[i].thread, NULL, \
-		routine, &structure->philos[i]) != 0)
+		if (pthread_create(&data->philos[i].thread, NULL, \
+		routine, &data->philos[i]) != 0)
 		{
 			while (i > 0)
-				pthread_detach(structure->philos[--i].thread);
+				pthread_detach(data->philos[--i].thread);
 			return (1);
 		}
 		i++;
 	}
 	while (1)
 	{
-		if (monitor_end(structure) != 0)
+		if (monitor_end(data) != 0)
 			break ;
 	}
-	if (wait_and_terminate(structure) != 0)
-		return (1);
+	// if (wait_and_terminate(data) != 0)
+	// 	return (1);
 	return (0);
 }
 
