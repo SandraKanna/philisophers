@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 20:52:53 by sandra            #+#    #+#             */
-/*   Updated: 2024/08/13 11:42:51 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/13 15:52:44 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	think(t_philo *philo)
 {
 	print_status(philo, "is thinking");
-	usleep_ms(philo->time_to_eat / 2);
+	// usleep_ms(philo->time_to_eat / 2);
 }
 
 static int	take_forks(t_philo *philo)
@@ -35,6 +35,9 @@ static int	take_forks(t_philo *philo)
 		{
 			usleep_ms(philo->time_to_die);
 			pthread_mutex_unlock(philo->r_fork);
+			pthread_mutex_lock(philo->death_lock);
+			*philo->should_stop = 1;
+			pthread_mutex_unlock(philo->death_lock);
 			return (1);
 		}
 		pthread_mutex_lock(philo->l_fork);
@@ -43,21 +46,22 @@ static int	take_forks(t_philo *philo)
 	return (0);
 }
 
-static void	eat(t_philo *philo)
+static int	eat(t_philo *philo)
 {
 	if (take_forks(philo) != 0)
-		return ;
+		return (1);
 	philo->is_eating = 1;
 	print_status(philo, "is eating");
-	pthread_mutex_lock(&philo->meals_lock);
+	pthread_mutex_lock(philo->meals_lock);
 	philo->last_meal = get_cur_time();
 	philo->meals_count++;
-	pthread_mutex_unlock(&philo->meals_lock);
+	pthread_mutex_unlock(philo->meals_lock);
 	usleep_ms(philo->time_to_eat);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
 	philo->is_eating = 0;
 	print_status(philo, "has put down the forks");
+	return (0);
 }
 
 static void	zzzleep(t_philo *philo)
@@ -71,11 +75,13 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	while (1)
+	while (should_stop(philo) == 0)
 	{
+		// print_status(philo, "is stoping");
+		if (eat(philo) != 0)
+			break ;
 		think(philo);
-		eat(philo);
 		zzzleep(philo);
 	}
-	return (NULL);
+	return (arg);
 }

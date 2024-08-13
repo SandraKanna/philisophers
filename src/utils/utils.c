@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:43:58 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/12 11:16:26 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/13 14:45:02 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,6 @@ void	ft_putnbr_fd(int n, int fd)
 		c = nbr % 10 + 48;
 		write(fd, &c, 1);
 	}
-}
-
-void	*ft_memset(void *arg, int c, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-		((char *)arg)[i++] = c;
-	return (arg);
 }
 
 long long	get_cur_time(void)
