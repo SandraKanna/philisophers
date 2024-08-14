@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/13 15:30:34 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 16:10:40 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,18 @@
 
 static void	init_args(t_philo *philo, char **av)
 {
+	long long	cur_time;
+
 	philo->time_to_die = ft_atoi(av[2]);
 	philo->time_to_eat = ft_atoi(av[3]);
 	philo->time_to_sleep = ft_atoi(av[4]);
 	if (!av[5])
-		philo->must_eat = 0;
+		philo->must_eat = -1;
 	else
 		philo->must_eat = ft_atoi(av[5]);
-	philo->start_time = get_cur_time();
-	philo->last_meal = get_cur_time();
+	cur_time = get_cur_time();
+	philo->start_time = cur_time;
+	philo->last_meal = cur_time;
 	philo->is_eating = 0;
 	philo->meals_count = 0;
 }
@@ -39,15 +42,12 @@ static void	init_philos(t_data *data, int size, char **args)
 		data->philos[i].id = i + 1;
 		data->philos[i].total_philos = size;
 		init_args(&data->philos[i], args);
-		data->philos[i].should_stop = &data->stop;
-		data->philos[i].r_fork = &data->forks[i];
+		data->philos[i].l_fork = &data->forks[i];
 		if (i == 0)
-			data->philos[i].l_fork = &data->forks[size - 1];
+			data->philos[i].r_fork = &data->forks[size - 1];
 		else
-			data->philos[i].l_fork = &data->forks[i - 1];
-		data->philos[i].death_lock = &data->death_lock;
-		data->philos[i].meals_lock = &data->meals_lock;
-		data->philos[i].print_lock = &data->print_lock;
+			data->philos[i].r_fork = &data->forks[i - 1];
+		data->philos[i].data = data;
 		i++;
 	}
 }
@@ -98,7 +98,6 @@ t_data	*init_struct(char **av)
 	if (!data)
 		return (NULL);
 	data->stop = 0;
-	data->all_ate = 0;
 	size = ft_atoi(av[1]);
 	data->philos = malloc(sizeof(t_philo) * size);
 	if (!data->philos)

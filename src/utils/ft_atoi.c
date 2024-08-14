@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   conversions.c                                      :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:54:39 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/13 16:01:18 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 15:13:25 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,47 +19,47 @@ static int	ft_isdigit(int d)
 	return (0);
 }
 
-static int	atoll_helper(const char *str, int *sign)
-{
-	int	i;
+// static int	atoll_helper(const char *str, int *sign)
+// {
+// 	int	i;
 
-	i = 0;
-	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			*sign = -1;
-		i++;
-	}
-	return (i);
-}
+// 	i = 0;
+// 	while (str[i] == ' ' || (str[i] >= '\t' && str[i] <= '\r'))
+// 		i++;
+// 	if (str[i] == '-' || str[i] == '+')
+// 	{
+// 		if (str[i] == '-')
+// 			*sign = -1;
+// 		i++;
+// 	}
+// 	return (i);
+// }
 
-long long	ft_atoll(const char *str, int *err)
-{
-	long long	result;
-	int			sign;
-	int			i;
+// long long	ft_atoll(const char *str, int *err)
+// {
+// 	long long	result;
+// 	int			sign;
+// 	int			i;
 
-	result = 0;
-	sign = 1;
-	i = atoll_helper(str, &sign);
-	while (ft_isdigit(str[i]))
-	{
-		if (result > (LLONG_MAX - (str[i] - '0')) / 10)
-		{
-			*err = 1;
-			return (0);
-		}
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	while (str[i] == ' ')
-		i++;
-	if (str[i] != '\0')
-		*err = 1;
-	return (result * sign);
-}
+// 	result = 0;
+// 	sign = 1;
+// 	i = atoll_helper(str, &sign);
+// 	while (ft_isdigit(str[i]))
+// 	{
+// 		if (result > (LLONG_MAX - (str[i] - '0')) / 10)
+// 		{
+// 			*err = 1;
+// 			return (0);
+// 		}
+// 		result = result * 10 + (str[i] - '0');
+// 		i++;
+// 	}
+// 	while (str[i] == ' ')
+// 		i++;
+// 	if (str[i] != '\0')
+// 		*err = 1;
+// 	return (result * sign);
+// }
 
 static int	count_digits(char *str)
 {
@@ -100,5 +100,5 @@ int	ft_atoi(const char *str)
 			return (0);
 		i++;
 	}
-	return ((int)(num * sign));
+	return ((long long)(num * sign));
 }

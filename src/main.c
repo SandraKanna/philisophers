@@ -6,32 +6,50 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/13 16:00:27 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 14:13:39 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_param(char *str)
+static int	check_int_limits(char *str)
 {
-	int	i;
+	char	*int_max;
+	char	*int_min;
+
+	int_max = "2147483647";
+	int_min = "2147483648";
+	if (ft_strlen(str) > 10)
+		return (err_msg("Parameters must be within integer range"), 0);
+	else if (ft_strlen(str) == 10)
+	{
+		if (str[0] == '-')
+		{
+			if (ft_strcmp(&str[1], int_min) > 0)
+				return (err_msg("Parameters must be within integer range"), 0);
+		}
+		else if (ft_strcmp(str, int_max) > 0)
+			return (err_msg("Parameters must be within integer range"), 0);
+	}
+	return (1);
+}
+
+static int	check_param(char *str)
+{
+	int		i;
 
 	i = 0;
 	if (str[0] == 48 && str[1] == '\0')
-	{
-		ft_putstr_fd("Parameters should be bigger than zero\n", 2);
-		return (0);
-	}
+		return (err_msg("Parameters should be bigger than zero"), 0);
 	while (str[i])
 	{
 		if (str[i] >= 48 && str[i] <= 57)
 			i++;
 		else
-		{
-			ft_putstr_fd("Parameters must be positive integers\n", 2);
-			return (0);
-		}
+			return (err_msg("Parameters must be positive integers"), 0);
 	}
+	if (!check_int_limits(str))
+		return (0);
 	return (1);
 }
 
@@ -42,10 +60,7 @@ int	main(int ac, char **av)
 
 	i = 1;
 	if (ac != 5 && ac != 6)
-	{
-		ft_putstr_fd("Invalid number of parameters\n", 2);
-		return (1);
-	}
+		return (err_msg("Invalid number of parameters"), 1);
 	while (av[i])
 	{
 		if (!check_param(av[i++]))
