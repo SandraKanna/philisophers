@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_status.c                                     :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/21 15:12:59 by sandra            #+#    #+#             */
-/*   Updated: 2024/08/14 17:03:08 by skanna           ###   ########.fr       */
+/*   Created: 2024/07/20 15:43:58 by skanna            #+#    #+#             */
+/*   Updated: 2024/08/14 23:06:42 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	should_stop(t_philo *philo)
+long long	get_cur_time(void)
 {
-	int	stop;
+	struct timeval	tv;
 
-	pthread_mutex_lock(&philo->data->death_lock);
-	stop = philo->data->stop;
-	pthread_mutex_unlock(&philo->data->death_lock);
+	if (gettimeofday(&tv, NULL) < 0)
+		err_msg("Error getting time of day");
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
 
-	return (stop);
+void	usleep_ms(int ms)
+{
+	usleep((ms - 1) * 1000);
 }
 
 void	print_status(t_philo *philo, char *status)
 {
 	long long	timestamp;
 
-	if (should_stop(philo))
-		return ;
 	timestamp = get_cur_time() - philo->start_time;
 	pthread_mutex_lock(&philo->data->print_lock);
-	printf("%llu %d %s\n", timestamp, philo->id, status);
+	if (!should_stop(philo))
+		printf("%llu %d %s\n", timestamp, philo->id, status);
 	pthread_mutex_unlock(&philo->data->print_lock);
 }

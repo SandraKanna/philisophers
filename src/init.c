@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initialization.c                                   :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 16:53:44 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 23:05:40 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ static void	init_args(t_philo *philo, char **av)
 static void	init_philos(t_data *data, int size, char **args)
 {
 	int				i;
-	pthread_mutex_t	*forks;
 
 	i = 0;
-	forks = data->forks;
 	while (i < size)
 	{
 		data->philos[i].id = i + 1;
@@ -89,7 +87,7 @@ static int	init_mutexes(t_data *structure)
 	return (0);
 }
 
-t_data	*init_struct(char **av)
+t_data	*initialize(char **av)
 {
 	t_data			*data;
 	int				size;

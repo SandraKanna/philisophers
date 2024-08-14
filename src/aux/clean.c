@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:17:03 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 16:52:59 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 23:06:38 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	err_msg(char *msg)
 	ft_putstr_fd("\n", 2);
 }
 
-void	clean_struct(t_data *structure, int size)
+void	destroy_and_free(t_data *structure, int size)
 {
 	int	i;
 

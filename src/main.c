@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 16:59:50 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 23:05:19 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,12 @@ int	main(int ac, char **av)
 		if (!check_param(av[i++]))
 			return (1);
 	}
-	data = init_struct(av);
+	data = initialize(av);
 	if (!data)
 		return (1);
-	if (run_philo(data, ft_atoi(av[1])) != 0)
-		return (clean_struct(data, ft_atoi(av[1])), 1);
-	clean_struct(data, ft_atoi(av[1]));
+	if (create_philos(data, ft_atoi(av[1])) != 0)
+		return (destroy_and_free(data, ft_atoi(av[1])), 1);
+	destroy_and_free(data, ft_atoi(av[1]));
 	return (0);
 }
-
-
 //while ! ./philo args; do done -->check for possible data race no debe haber

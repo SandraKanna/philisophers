@@ -1,10 +1,10 @@
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes -fsanitize=thread
+CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes #-fsanitize=thread
 
 NAME = philo
 
-SRC = ${addprefix src/, main.c philo.c initialization.c routine.c check_status.c\
-	${addprefix utils/, utils.c ft_functions.c clean.c}}
+SRC = ${addprefix src/, main.c philo.c init.c routine.c monitor.c\
+	${addprefix aux/, utils.c ft_functions.c clean.c}}
 
 OBJ = $(SRC:.c=.o)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 16:48:46 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 23:13:51 by sandra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,17 @@ typedef struct s_data
 }					t_data;
 
 //main functions
-t_data		*init_struct(char **av);
-int			run_philo(t_data *structure, int size);
+t_data		*initialize(char **av);
+int			create_philos(t_data *structure, int size);
+void		*philo_lives(void *arg);
 int			should_stop(t_philo *philo);
-void		*routine(void *arg);
+int			monitor_end(t_data *data, int size);
+
+//auxiliar functions
 long long	get_cur_time(void);
 void		usleep_ms(int ms);
 void		print_status(t_philo *philo, char *status);
-
-//auxiliar functions
-void		clean_struct(t_data *structure, int size);
+void		destroy_and_free(t_data *structure, int size);
 void		err_msg(char *msg);
 size_t		ft_strlen(const char *str);
 int			ft_strcmp(const char *s1, const char *s2);
