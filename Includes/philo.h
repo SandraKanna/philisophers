@@ -6,14 +6,14 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 15:29:02 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 16:48:46 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <stdio.h> //delete after debugs
+# include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
 # include <stdlib.h>
@@ -48,19 +48,20 @@ typedef struct s_data
 	pthread_mutex_t	print_lock;
 }					t_data;
 
-void		clean_struct(t_data *structure, int size);
-void		err_msg(char *msg);
-void		ft_putstr_fd(char *s, int fd);
-void		ft_putnbr_fd(int n, int fd);
-size_t		ft_strlen(const char *str);
-int			ft_strcmp(const char *s1, const char *s2);
+//main functions
 t_data		*init_struct(char **av);
-int			ft_atoi(const char *str);
 int			run_philo(t_data *structure, int size);
 int			should_stop(t_philo *philo);
 void		*routine(void *arg);
 long long	get_cur_time(void);
 void		usleep_ms(int ms);
 void		print_status(t_philo *philo, char *status);
+
+//auxiliar functions
+void		clean_struct(t_data *structure, int size);
+void		err_msg(char *msg);
+size_t		ft_strlen(const char *str);
+int			ft_strcmp(const char *s1, const char *s2);
+int			ft_atoi(const char *str);
 
 #endif

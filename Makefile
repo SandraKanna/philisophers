@@ -4,7 +4,7 @@ CFLAGS = -g3 -Wall -Wextra -Werror -IIncludes -fsanitize=thread
 NAME = philo
 
 SRC = ${addprefix src/, main.c philo.c initialization.c routine.c check_status.c\
-	${addprefix utils/, utils.c ft_atoi.c ft_functions.c clean.c}}
+	${addprefix utils/, utils.c ft_functions.c clean.c}}
 
 OBJ = $(SRC:.c=.o)
 

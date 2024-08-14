@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 16:40:12 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 16:43:57 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	check_all_ate(t_data *data, int size)
 		data->stop = 1;
 		pthread_mutex_unlock(&data->death_lock);
 		pthread_mutex_lock(&data->print_lock);
-		ft_putstr_fd("All have eaten\n", 1);
+		printf("All have eaten\n");
 		pthread_mutex_unlock(&data->print_lock);
 		return (1);
 	}

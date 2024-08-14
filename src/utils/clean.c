@@ -6,11 +6,22 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:17:03 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 12:36:22 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 16:52:59 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	ft_putstr_fd(char *s, int fd)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return ;
+	while (s[i])
+		write(fd, &(s[i++]), 1);
+}
 
 void	err_msg(char *msg)
 {

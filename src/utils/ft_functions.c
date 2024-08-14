@@ -6,46 +6,11 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 12:32:01 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 12:32:25 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 16:46:46 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return ;
-	while (s[i])
-		write(fd, &(s[i++]), 1);
-}
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	long int	nbr;
-	char		c;
-
-	nbr = n;
-	if (nbr < 0)
-	{
-		write(fd, "-", 1);
-		nbr = nbr * -1;
-	}
-	if (nbr < 10)
-	{
-		c = nbr + 48;
-		write(fd, &c, 1);
-	}
-	else
-	{
-		ft_putnbr_fd((nbr / 10), fd);
-		c = nbr % 10 + 48;
-		write(fd, &c, 1);
-	}
-}
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -74,4 +39,53 @@ size_t	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+static int	ft_isdigit(int d)
+{
+	if (d >= 48 && d <= 57)
+		return (1);
+	return (0);
+}
+
+static int	count_digits(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]))
+			i++;
+		else
+			break ;
+	}
+	return (i);
+}
+
+int	ft_atoi(const char *str)
+{
+	long	num;
+	int		sign;
+	int		i;
+	int		n;
+
+	num = 0;
+	sign = 1;
+	while (*str == 32 || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == 45)
+		sign = -1;
+	if (*str == 43 || *str == 45)
+		str++;
+	n = count_digits((char *)str);
+	i = 0;
+	while (i < n)
+	{
+		num = (num * 10) + (str[i] - '0');
+		if ((sign == 1 && num > INT_MAX) || (sign == -1 && (-num) < INT_MIN))
+			return (0);
+		i++;
+	}
+	return ((long long)(num * sign));
 }

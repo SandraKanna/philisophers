@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 20:52:53 by sandra            #+#    #+#             */
-/*   Updated: 2024/08/14 16:23:57 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/14 17:08:25 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void	*routine(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
 		usleep_ms(1);
-	// while (should_stop(philo) == 0)
 	while (1)
 	{
 		if (should_stop(philo))
