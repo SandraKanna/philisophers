@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 15:27:40 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:32:30 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_data
 
 //main functions
 t_data		*initialize(char **av);
-int			create_philos(t_data *structure, int size);
+int			manage_philos(t_data *structure, int size);
 void		*philo_lives(void *arg);
 int			should_stop(t_philo *philo);
 void		monitor_end(t_data *data, int size);

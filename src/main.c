@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 15:25:45 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:32:22 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	main(int ac, char **av)
 	data = initialize(av);
 	if (!data)
 		return (1);
-	if (create_philos(data, ft_atoi(av[1])) != 0)
+	if (manage_philos(data, ft_atoi(av[1])) != 0)
 		return (free_data(data), 1);
 	monitor_end(data, ft_atoi(av[1]));
 	free_data(data);

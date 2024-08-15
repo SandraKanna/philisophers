@@ -6,13 +6,13 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 15:21:30 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:32:16 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	create_philos(t_data *data, int size)
+int	manage_philos(t_data *data, int size)
 {
 	int	i;
 

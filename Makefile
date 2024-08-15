@@ -27,6 +27,6 @@ fclean: clean
 re: fclean all
 
 run: philo
-	TSAN_OPTIONS=second_deadlock_stack=1 ./philo 4 410 200 200 7
+	TSAN_OPTIONS=second_deadlock_stack=1 ./philo 2 310 200 100
 
 .PHONY: all clean fclean re
