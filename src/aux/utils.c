@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:43:58 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 14:24:24 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:27:40 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,6 @@ void	print_status(t_philo *philo, char *status)
 	timestamp = get_cur_time() - philo->start_time;
 	pthread_mutex_lock(&philo->data->print_lock);
 	if (!should_stop(philo))
-		printf("%lld %d %s\n", timestamp, philo->id, status);
+		printf("%lld Philosopher %d %s\n", timestamp, philo->id, status);
 	pthread_mutex_unlock(&philo->data->print_lock);
 }

@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 13:14:23 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:21:30 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@ int	create_philos(t_data *data, int size)
 			return (1);
 		}
 		i++;
-	}
-	while (1)
-	{
-		if (monitor_end(data, size) == 1)
-			return (1);
-		usleep_ms(1);
 	}
 	return (0);
 }

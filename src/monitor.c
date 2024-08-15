@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 15:12:59 by sandra            #+#    #+#             */
-/*   Updated: 2024/08/15 14:21:06 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:25:17 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static int	check_death(t_data *data, int size, int i)
 			data->philos[i].last_meal, data->philos[i].id);
 			pthread_mutex_unlock(&data->print_lock);
 			pthread_mutex_unlock(&data->meals_lock);
-			return (destroy_and_free(data, size), 1);
+			kill_zombies(data, size);
+			return (destroy_mutex(data, size), 1);
 		}
 		pthread_mutex_unlock(&data->print_lock);
 		pthread_mutex_unlock(&data->meals_lock);
@@ -58,7 +59,8 @@ static void	all_have_eaten(t_data *data, int size)
 	pthread_mutex_lock(&data->print_lock);
 	printf("All have eaten\n");
 	pthread_mutex_unlock(&data->print_lock);
-	destroy_and_free(data, size);
+	kill_zombies(data, size);
+	destroy_mutex(data, size);
 }
 
 static int	check_meals(t_data *data, int size)
@@ -85,12 +87,15 @@ static int	check_meals(t_data *data, int size)
 	return (0);
 }
 
-int	monitor_end(t_data *data, int size)
+void	monitor_end(t_data *data, int size)
 {
 	int	i;
 
 	i = 0;
-	if (check_death(data, size, i) != 0 || check_meals(data, size) != 0)
-		return (1);
-	return (0);
+	while (1)
+	{
+		if (check_death(data, size, i) != 0 || check_meals(data, size) != 0)
+			break ;
+		usleep_ms(1);
+	}
 }

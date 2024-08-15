@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:02:56 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 12:47:23 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:27:40 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,15 @@ t_data		*initialize(char **av);
 int			create_philos(t_data *structure, int size);
 void		*philo_lives(void *arg);
 int			should_stop(t_philo *philo);
-int			monitor_end(t_data *data, int size);
+void		monitor_end(t_data *data, int size);
+void		kill_zombies(t_data *data, int size);
+void		destroy_mutex(t_data *structure, int size);
 
 //auxiliar functions
 long long	get_cur_time(void);
 void		usleep_ms(long long sleep);
 void		print_status(t_philo *philo, char *status);
-void		destroy_and_free(t_data *structure, int size);
+void		free_data(t_data *structure);
 void		err_msg(char *msg);
 size_t		ft_strlen(const char *str);
 int			ft_strcmp(const char *s1, const char *s2);

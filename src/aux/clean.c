@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:17:03 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/15 13:26:40 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/15 15:15:02 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	err_msg(char *msg)
 	ft_putstr_fd("\n", 2);
 }
 
-static int	kill_zombies(t_data *data, int size)
+void	kill_zombies(t_data *data, int size)
 {
 	int	i;
 
@@ -37,29 +37,31 @@ static int	kill_zombies(t_data *data, int size)
 	while (i < size)
 	{
 		if (pthread_join(data->philos[i].thread, NULL) != 0)
-			return (1);
+			err_msg("Error joining threads");
 		i++;
 	}
-	return (0);
 }
 
-void	destroy_and_free(t_data *structure, int size)
+void	destroy_mutex(t_data *structure, int size)
 {
 	int	i;
 
 	i = 0;
-	kill_zombies(structure, size);
 	if (structure->forks)
 	{
 		while (i < size)
 			pthread_mutex_destroy(&structure->forks[i++]);
-		free(structure->forks);
 	}
-	if (structure->philos)
-		free(structure->philos);
 	pthread_mutex_destroy(&structure->print_lock);
 	pthread_mutex_destroy(&structure->meals_lock);
 	pthread_mutex_destroy(&structure->death_lock);
+}
+
+void	free_data(t_data *structure)
+{
+	if (structure->forks)
+		free(structure->forks);
+	if (structure->philos)
+		free(structure->philos);
 	free(structure);
-	structure = NULL;
 }
