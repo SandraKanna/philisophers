@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 16:22:24 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 23:05:40 by sandra           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:19:43 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static void	init_args(t_philo *philo, char **av)
 {
-	long long	cur_time;
-
 	philo->time_to_die = ft_atoi(av[2]);
 	philo->time_to_eat = ft_atoi(av[3]);
 	philo->time_to_sleep = ft_atoi(av[4]);
@@ -23,18 +21,17 @@ static void	init_args(t_philo *philo, char **av)
 		philo->must_eat = -1;
 	else
 		philo->must_eat = ft_atoi(av[5]);
-	cur_time = get_cur_time();
-	philo->start_time = cur_time;
-	philo->last_meal = cur_time;
 	philo->is_eating = 0;
 	philo->meals_count = 0;
 }
 
 static void	init_philos(t_data *data, int size, char **args)
 {
-	int				i;
+	int			i;
+	long long	cur_time;
 
 	i = 0;
+	cur_time = get_cur_time();
 	while (i < size)
 	{
 		data->philos[i].id = i + 1;
@@ -46,6 +43,8 @@ static void	init_philos(t_data *data, int size, char **args)
 		else
 			data->philos[i].r_fork = &data->forks[i - 1];
 		data->philos[i].data = data;
+		data->philos[i].start_time = cur_time;
+		data->philos[i].last_meal = cur_time;
 		i++;
 	}
 }

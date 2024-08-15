@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:01:51 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 23:05:19 by sandra           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:20:02 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ int	main(int ac, char **av)
 	if (!data)
 		return (1);
 	if (create_philos(data, ft_atoi(av[1])) != 0)
-		return (destroy_and_free(data, ft_atoi(av[1])), 1);
+		return (1);
 	destroy_and_free(data, ft_atoi(av[1]));
 	return (0);
 }
-//while ! ./philo args; do done -->check for possible data race no debe haber

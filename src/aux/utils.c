@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 15:43:58 by skanna            #+#    #+#             */
-/*   Updated: 2024/08/14 23:06:42 by sandra           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:24:24 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,18 @@ long long	get_cur_time(void)
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void	usleep_ms(int ms)
+void	usleep_ms(long long sleep)
 {
-	usleep((ms - 1) * 1000);
+	long long	start;
+	long long	cur;
+
+	start = get_cur_time();
+	cur = start;
+	while (cur - start < sleep)
+	{
+		usleep(1);
+		cur = get_cur_time();
+	}
 }
 
 void	print_status(t_philo *philo, char *status)
@@ -33,6 +42,6 @@ void	print_status(t_philo *philo, char *status)
 	timestamp = get_cur_time() - philo->start_time;
 	pthread_mutex_lock(&philo->data->print_lock);
 	if (!should_stop(philo))
-		printf("%llu %d %s\n", timestamp, philo->id, status);
+		printf("%lld %d %s\n", timestamp, philo->id, status);
 	pthread_mutex_unlock(&philo->data->print_lock);
 }

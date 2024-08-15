@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sandra <sandra@student.42.fr>              +#+  +:+       +#+        */
+/*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 20:52:53 by sandra            #+#    #+#             */
-/*   Updated: 2024/08/14 23:11:57 by sandra           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:06:01 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 static void	think(t_philo *philo)
 {
 	print_status(philo, "is thinking");
+}
+
+static void	zzzleep(t_philo *philo)
+{
+	print_status(philo, "is sleeping");
+	usleep_ms(philo->time_to_sleep);
 }
 
 static int	take_forks(t_philo *philo)
@@ -29,10 +35,10 @@ static int	take_forks(t_philo *philo)
 	}
 	else
 	{
-		pthread_mutex_lock(philo->r_fork);
-		print_status(philo, "has taken right fork");
 		pthread_mutex_lock(philo->l_fork);
 		print_status(philo, "has taken left fork");
+		pthread_mutex_lock(philo->r_fork);
+		print_status(philo, "has taken right fork");
 	}
 	return (0);
 }
@@ -45,22 +51,15 @@ static int	eat(t_philo *philo)
 	pthread_mutex_lock(&philo->data->meals_lock);
 	philo->is_eating = 1;
 	philo->last_meal = get_cur_time();
-	philo->meals_count++;
 	pthread_mutex_unlock(&philo->data->meals_lock);
-	usleep_ms(philo->time_to_eat - 1);
+	usleep_ms(philo->time_to_eat);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
 	pthread_mutex_lock(&philo->data->meals_lock);
 	philo->is_eating = 0;
+	philo->meals_count++;
 	pthread_mutex_unlock(&philo->data->meals_lock);
-	print_status(philo, "has put down the forks");
 	return (0);
-}
-
-static void	zzzleep(t_philo *philo)
-{
-	print_status(philo, "is sleeping");
-	usleep_ms(philo->time_to_sleep);
 }
 
 void	*philo_lives(void *arg)
@@ -69,7 +68,7 @@ void	*philo_lives(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		usleep_ms(philo->time_to_eat / 10);
+		usleep_ms(philo->time_to_eat);
 	while (1)
 	{
 		if (should_stop(philo))
@@ -78,10 +77,10 @@ void	*philo_lives(void *arg)
 			break ;
 		if (should_stop(philo))
 			break ;
-		think(philo);
+		zzzleep(philo);
 		if (should_stop(philo))
 			break ;
-		zzzleep(philo);
+		think(philo);
 		if (should_stop(philo))
 			break ;
 	}
