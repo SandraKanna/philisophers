@@ -6,7 +6,7 @@
 /*   By: skanna <skanna@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 15:12:59 by sandra            #+#    #+#             */
-/*   Updated: 2024/08/15 15:25:17 by skanna           ###   ########.fr       */
+/*   Updated: 2024/08/16 12:21:52 by skanna           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	check_death(t_data *data, int size, int i)
 			data->stop = 1;
 			pthread_mutex_unlock(&data->death_lock);
 			printf("%llu Philosopher %d has died\n", cur_time - \
-			data->philos[i].last_meal, data->philos[i].id);
+			data->philos[i].start_time, data->philos[i].id);
 			pthread_mutex_unlock(&data->print_lock);
 			pthread_mutex_unlock(&data->meals_lock);
 			kill_zombies(data, size);
