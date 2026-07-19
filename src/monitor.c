@@ -30,13 +30,14 @@ static int	check_death(t_data *data, int size, int i)
 	{
 		cur_time = get_cur_time();
 		pthread_mutex_lock(&data->meals_lock);
-		pthread_mutex_lock(&data->print_lock);
 		if (!data->philos[i].is_eating && cur_time \
 		- data->philos[i].last_meal > data->philos[i].time_to_die)
 		{
 			pthread_mutex_lock(&data->death_lock);
 			data->stop = 1;
 			pthread_mutex_unlock(&data->death_lock);
+			// Take print_lock only to print: scanning with it starves the philos
+			pthread_mutex_lock(&data->print_lock); 
 			printf("%llu Philosopher %d has died\n", cur_time - \
 			data->philos[i].start_time, data->philos[i].id);
 			pthread_mutex_unlock(&data->print_lock);
@@ -44,7 +45,6 @@ static int	check_death(t_data *data, int size, int i)
 			kill_zombies(data, size);
 			return (destroy_mutex(data, size), 1);
 		}
-		pthread_mutex_unlock(&data->print_lock);
 		pthread_mutex_unlock(&data->meals_lock);
 		i++;
 	}

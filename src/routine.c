@@ -33,13 +33,22 @@ static int	take_forks(t_philo *philo)
 		pthread_mutex_unlock(philo->l_fork);
 		return (1);
 	}
-	else
+	/* Lock the lower-address fork first: one global order that all
+	threads agree on, so waits can't form a cycle -> no deadlock */
+	if (philo->l_fork < philo->r_fork)
 	{
 		pthread_mutex_lock(philo->l_fork);
 		print_status(philo, "has taken left fork");
 		pthread_mutex_lock(philo->r_fork);
 		print_status(philo, "has taken right fork");
 	}
+	else
+    {
+		pthread_mutex_lock(philo->r_fork);
+		print_status(philo, "has taken right fork");
+		pthread_mutex_lock(philo->l_fork);
+		print_status(philo, "has taken left fork");
+    }
 	return (0);
 }
 
@@ -47,11 +56,13 @@ static int	eat(t_philo *philo)
 {
 	if (take_forks(philo) != 0)
 		return (1);
-	print_status(philo, "is eating");
 	pthread_mutex_lock(&philo->data->meals_lock);
 	philo->is_eating = 1;
 	philo->last_meal = get_cur_time();
 	pthread_mutex_unlock(&philo->data->meals_lock);
+	/* After last_meal update: the monitor must see the philosopher 
+	alive as soon as they hold both forks, not after print_lock */
+	print_status(philo, "is eating");
 	usleep_ms(philo->time_to_eat);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);

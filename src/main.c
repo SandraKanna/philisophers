@@ -70,7 +70,12 @@ int	main(int ac, char **av)
 	if (!data)
 		return (1);
 	if (manage_philos(data, ft_atoi(av[1])) != 0)
+	{
+		/* If thread creation fails, mutexes that were initialized must be destroyed here.
+		free_data() only frees memory, it does not destroy mutexes. */
+		destroy_mutex(data, ft_atoi(av[1]));
 		return (free_data(data), 1);
+    }
 	monitor_end(data, ft_atoi(av[1]));
 	free_data(data);
 	return (0);

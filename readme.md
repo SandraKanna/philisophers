@@ -1,87 +1,90 @@
-# Philosophers 42
+# Philosophers
 
-**Goal:** learn about threads, multi-threading, and mutex (mutual exclusion).
+A classic concurrency exercise from the 42 curriculum: N philosophers sit at a round table with one fork between each pair. To eat, a philosopher needs both adjacent forks. Each philosopher is a thread, each fork is a mutex, and the program must guarantee no data races, no deadlocks, no scrambled output, and death detection within 10 ms.
 
-**Thread**:
-**Mutex**:
-Mutex types:  NORMAL, ERRORCHECK, RECURSIVE, DEFAULT (behavior depends on type)
+Written in C, following the 42 Norm (functions ≤ 25 lines, ≤ 5 functions per file, no globals), which explains some structural choices.
 
-**Rules:**
-* Each philosopher should be a thread.
-* There is one fork between each pair of philosophers. 
-* If there are several philosophers, each philosopher has a fork on their left side and a fork on their right side.
-* If there is only one philosopher, there should be only one fork on the table.
-* To prevent philosophers from duplicating forks, each of the forks state should be protected with a mutex.
+## Usage
 
-### Allowed functions:
-**Classic:** memset, printf, malloc, free, write.
+```
+./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
+```
 
-**New:**
-- **usleep**: library: unistd.h. Prototype: int usleep(useconds_t usec); suspends execution of the calling thread for (at
-       least) usec (unsigned) microseconds.  The sleep may be lengthened slightly by  any
-       system  activity  or  by  the  time spent processing the call or by the
-       granularity of system timers. **Returns** 0 on success.  On error, -1 is returned, with errno set to
-       indicate the cause of the error.
+Time is in milliseconds. Philosophers loop: eat → sleep → think. 
+A philosopher who goes longer than `time_to_die` without starting a meal dies and the simulation stops; with the optional fifth argument, it also stops once everyone has eaten that many times.
 
-       **Errors**: EINTR  Interrupted by a signal; EINVAL usec  is  greater  than  or equal to 1000000.
+## Concurrency design
 
+One thread per philosopher, one mutex per fork, plus three state mutexes: `meals_lock` (last meal time, meal count), `death_lock` (stop flag), `print_lock` (output serialization).
 
-- **gettimeofday**: Library: sys/time.h. Prototype: int gettimeofday(struct timeval *tv, struct timezone *tz); gets time and timezone.
-        The tv argument is a struct timeval (as specified in <sys/time.h>): and gives the number of seconds and microseconds since the Epoch
-        If either tv or tz is NULL, the corresponding structure is not set or  returned. **Return** 0 for success, or -1 for failure
-        Errors:  EFAULT (tv or tz pointing outside accessible addresse space), EINVAL (tv.tv_sec is  negative or outside the range), 
-        EPERM (The calling process has insufficient privilege)
+### Deadlock: the naive version
 
-**Library: pthread.h**
-- **pthread_create**: Protoype: int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg); 
-        starts  a  new  thread in the calling process.  The new thread starts execution by invoking start_routine(); arg is passed as the sole  argument
-        of start_routine(). It terminates when: It calls pthread_exit(3), specifying an exit status value that is available to another
-        thread in the same process that calls pthread_join(3). It returns from start_routine(). It is cancelled with  pthread_cancel. 
-        Any  of the threads in the process calls exit(3), or the main thread performs a return from main(). On success, pthread_create() **returns** 0; on error, it returns an error  number,  and  the contents of *thread are undefined. 
-        **Errors**: EAGAIN (Insufficient resources to create another thread), EINVAL, EPERM.
+The table, with 4 philosophers — each fork (mutex) sits between two neighbors, so adjacent philosophers share it:
 
-- **pthread_join**: Protoype: int pthread_join(pthread_t thread, void **retval); waits for the thread specified by thread to terminate.
-        If that thread has already terminated, then pthread_join() returns immediately. The thread specified by thread must be joinable.
-        If retval is not NULL, then pthread_join() copies the exit status of the target thread into  the location pointed to by retval.
-        If the target thread was canceled, then PTHREAD_CANCELED is placed in the location pointed to by retval.
-        If multiple threads simultaneously try to join with the same thread, the results are undefined.
-        If the thread calling pthread_join() is canceled, then the target thread will remain joinable.
-        On success, pthread_join() **returns** 0; on error, it returns an error number.
-        **Errors**: EINVAL (thread not joinable or another thread is alreasy waiting to join), EDEADLK (A deadlock was detected (e.g., two threads tried to join  with  each  other);  or
-        thread specifies the calling thread). ESRCH (No thread with the ID thread could be found).
+```
+        P1
+    F0      F3
+ P2            P4
+    F1      F2
+        P3
+```
 
-- **pthread_detach**: Protoype: int pthread_detach(pthread_t thread); marks the thread identified by thread as detached.
-        When a detached thread terminates, its resources are automatically released back to the  system without the need for another thread to join with the terminated thread.
-        Attempting to detach an already detached thread results in unspecified behavior.
-        On success, pthread_detach() **returns** 0; on error, it returns an error number.
-        **Errors**: EINVAL (thread not joinable). ESRCH (no thread with the ID thread could be found).
+"Everyone grabs their left fork first" looks like a consistent rule, but *left* is relative to each seat. Watch what happens when all four get hungry at the same instant. Step 1 — every left hand succeeds, because each one reaches for a different fork:
 
-- **pthread_mutex_init**: Protoype: int pthread_mutex_init(pthread_mutex_t *restrict mutex, const pthread_mutexattr_t *restrict attr);
-        Initializes the mutex referenced by mutex with attributes specified by attr.  If attr is NULL, the default mutex attributes  are  used;
-        the  effect  shall  be the same as passing the address of a default mutex attributes object.
-        Upon successful initialization, the state of the mutex becomes initialized and unlocked.
-        A destroyed mutex object can be reinitialized using pthread_mutex_init(); the results of otherwise referencing the object after it has been destroyed are undefined.
-        Attempting to initialize an already initialized mutex results in undefined behavior. **Return** 0 for success and other numbers for error.
-        **Errors:** EAGAIN (syst has not enough ressources - other than mem - to initialize mutex). ENOMEM (not enough memory). EPERM (no perm). EINVAL (attr has the robust mutex attribute set without the process-shared attribute being set)
+```
+P1 holds F0     P2 holds F1     P3 holds F2     P4 holds F3
+```
 
-- **pthread_mutex_destroy**: Protoype: int pthread_mutex_destroy(pthread_mutex_t *mutex);
-        destroy the mutex object referenced by mutex; the mutex  object  becomes,  in  effect,  uninitialized.
-        It shall be safe to destroy an initialized mutex that is unlocked.   Attempting  to  destroy  a  locked mutex,
-        or a mutex that another thread is attempting to lock, or a mutex that is being used in a pthread_cond_timedwait() or 
-        pthread_cond_wait() call by  another thread, results in undefined behavior. **Return** 0 for success and other numbers for error.
-        **Errors:** EAGAIN (syst has not enough ressources - other than mem - to initialize mutex). ENOMEM (not enough memory). EPERM (no perm). EINVAL (attr has the robust mutex attribute set without the process-shared attribute being set)
+All four forks are now taken. Step 2 — every right hand reaches out and finds the neighbor already holding that fork:
 
-- **pthread_mutex_lock**: Protoype: int pthread_mutex_lock(pthread_mutex_t *mutex); **returns**  zero  or [EOWNERDEAD]. If the mutex is already locked by another thread,
-        the calling thread shall block until the mutex becomes available. This  operation  shall return  with  the  mutex object referenced by mutex in the locked state with the calling
-        thread as its owner.
+```
+P1 waits for F3  →  held by P4
+P4 waits for F2  →  held by P3
+P3 waits for F1  →  held by P2
+P2 waits for F0  →  held by P1   ← P1 is where we started
+```
 
-- **pthread_mutex_unlock**: Protoype: int pthread_mutex_unlock(pthread_mutex_t *mutex); release the mutex object referenced by mutex.
-       The manner in which a mutex is released is dependent upon the mutex's type attribute.
-       If there are threads blocked on the mutex object referenced by mutex when pthread_mutex_unlock() is called, resulting in the mutex becoming available, 
-       the scheduling policy shall determine which thread shall acquire the mutex.
-       If a signal is delivered to a thread waiting for a mutex, upon return  from  the  signal
-       handler the thread shall resume waiting for the mutex as if it was not interrupted.
-       If  successful, the pthread_mutex_lock(), pthread_mutex_trylock(), and pthread_mutex_un‐
-       lock() functions shall return zero; otherwise, an error number shall be returned to  in‐
-       dicate the error.
+The wait chain closes on itself. Reading it as "who is blocked by whom":
 
+```
+P1 ──▶ P4 ──▶ P3 ──▶ P2 ──▶ P1 ──▶ ...    (X ──▶ Y means "X waits for a fork Y holds")
+```
+
+Nobody will ever release what they hold (they release only after eating, and none can eat), so all four block forever. That closed circle is the *circular wait* — the [Coffman condition](https://faq.computersciencewiki.org/index.php/home/article/coffman-conditions)  this design fails to break.
+
+### The fix: resource ordering
+
+Each philosopher locks the fork at the **lower memory address** first. The forks live in one contiguous array, so address order is index order — a global order all threads agree on, regardless of seat. Re-run the same worst case (all four hungry at the same instant), now with each one reaching for its lower-numbered fork first:
+
+```
+P1: F0 then F3      P2: F0 then F1      P3: F1 then F2      P4: F2 then F3
+```
+
+Note the effect: P1 and P2 now compete for the *same first fork* (F0). The loser waits **holding nothing** — blocking nobody — and F3 stays free on the table for P1 to complete a pair. A wait chain can only move toward higher indices:
+
+```
+F0 ──▶ F1 ──▶ F2 ──▶ F3 ──▶ ∅     a cycle would need to come back down — impossible
+```
+
+Deadlock becomes impossible by construction, not by timing luck.
+
+### Accurate death detection
+
+A monitor loop in the main thread polls each philosopher every ~1 ms. Two details keep detection precise under tight timings: `last_meal` is updated immediately after the second fork is acquired (before any logging), so a philosopher holding both forks is never falsely declared dead; and the monitor takes `print_lock` only when actually printing a death, keeping contention low.
+
+## Build and run
+
+```bash
+make        # builds ./philo
+make re     # full rebuild
+make tsan   # rebuild with ThreadSanitizer and run a race check
+```
+
+```bash
+./philo 4 410 200 200       # ~10 ms of slack: nobody dies
+./philo 5 800 200 200 7     # stops after everyone eats 7 times
+./philo 1 800 200 200       # single philosopher: dies at ~800 ms
+./philo 2 410 200 200       # 2 philos, 2 forks, strict turns: hardest timing test, nobody dies
+```
+
+Some parameter sets are mathematically unsurvivable no matter the implementation (e.g. `./philo 7 100 5 300` — sleeping 300 ms with a 100 ms death timer). The program's job there is to detect the death on time.
